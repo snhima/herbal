@@ -1,0 +1,45 @@
+<?php
+							  
+									include('koneksi.php');
+									include('stemming.php');
+								
+								if(isset($_GET['simpan'])){
+									
+									$id_tanaman 		= $_GET['id_tanaman'];
+									//$manfaat			= $_GET['manfaat'];
+									//$id_herbal_proses 	= $_GET['id_herbal_proses'];
+									//$jumlah_kata 		= $_GET['jumlah_kata'];
+									//$kata_dasar 		= $_GET['kata_dasar'];
+									$arr_kata=0;
+									$query = "select manfaat from herbal_input where id_tanaman='$id_tanaman'";
+									$data = mysql_query($query);
+									$no=0;
+									while($row=mysql_fetch_array($data)){
+										$no++; 
+										$kalimat_kecil = strtolower($row['manfaat'].'<br/>');
+										$arr = explode(" ", $kalimat_kecil);
+										$arr_kata = preg_replace('/[^A-Za-z0-9\-]/', '', $arr);
+									}
+									$jmlh = 0;
+									for($i=0; $i<count($arr_kata); $i++){
+										$stopword=mysql_query("SELECT * from stoplist WHERE kata='".$arr_kata[$i]."'");
+										
+										if (mysql_num_rows($stopword)==0){
+											$teksAsli[$i] = $arr_kata[$i];
+											$stemming[$i] = stemming($teksAsli[$i]);
+											$datab = $stemming[$i];
+											$stopword2=mysql_query("INSERT into herbal_proses values('null','null','null','$datab')");
+											//echo $stemming.'<br/>';
+										}else{
+											echo 'Gagal menambahkan data! ';
+										}
+										
+										$stopword3=mysql_query("SELECT herbal_proses.kata_dasar, COUNT(herbal_proses.kata_dasar) from herbal_proses)");
+										while($row2=mysql_fetch_array($stopword3)){
+											echo '<tr><td>'.$row['kata_dasar'].'</td></tr><br/>';
+										}
+									}
+								}else{
+									echo "maafkanku";
+								}
+							?>
