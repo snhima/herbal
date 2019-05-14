@@ -34,7 +34,9 @@ if(isset($_GET['proses'])){
 	$id_query = mysql_query("select id_tanaman from herbal_input");
 	foreach($stemming as $stem){
 		$row = mysql_query("select kata_dasar, jumlah_kata from herbal_proses where kata_dasar like '%$stem%'");
-		echo '<pre>'; print_r($row);
+		while($row2=mysql_fetch_array($row)){
+			echo '<pre>'; print_r($row2);
+		}
 	}
 	while($id=mysql_fetch_array($id_query)){
 		echo '<pre>'; print_r($id);
