@@ -26,21 +26,23 @@ if(isset($_GET['proses'])){
 			foreach ($innerArray as $value) {
 				echo '<pre>'; print_r(array($value));
 			}
-		}else{
-			echo '<pre>'; print_r(array($innerArray));
 		}
 	}
 	
-	$id_query = mysql_query("select id_tanaman from herbal_input");
+	$data = mysql_query("select id_tanaman from herbal_input");
+	while($data2=mysql_fetch_array($data)){
+		echo '<pre>'; print_r($data2);
+	
 	foreach($stemming as $stem){
-		$row = mysql_query("select kata_dasar, jumlah_kata from herbal_proses where kata_dasar like '%$stem%'");
-		while($row2=mysql_fetch_array($row)){
-			echo '<pre>'; print_r($row2);
+		foreach($data2 as $dataa){
+			$row = mysql_query("select kata_dasar, jumlah_kata from herbal_proses where kata_dasar like '%".$stem."%' and id_tanaman='".$dataa."'");
+			while($row2=mysql_fetch_array($row)){
+				echo '<pre>'; print_r($row2);
+			}
 		}
 	}
-	while($id=mysql_fetch_array($id_query)){
-		echo '<pre>'; print_r($id);
 	}
+	
 	
 		//TF
 		/*if(isset($hasil[""])){
